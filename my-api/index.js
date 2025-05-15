@@ -1,9 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
-
+const cors = require('cors');
+app.use(cors()); // Bật CORS cho tất cả origin
 app.use(express.json());
-
 // Route gốc ("/"): trả về JSON thay vì HTML
 app.get('/', (req, res) => {
   fs.readFile('./data.json', 'utf8', (err, data) => {
@@ -21,3 +21,5 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`API đang chạy tại http://localhost:${PORT}`);
 });
+
+
