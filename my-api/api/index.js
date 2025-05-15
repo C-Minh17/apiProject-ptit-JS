@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
@@ -16,13 +17,13 @@ app.get('/', (req, res) => {
     try {
       const products = JSON.parse(data);
       res.json(products);
-    } catch (parseErr) {
-      res.status(500).json({ error: 'Lỗi phân tích dữ liệu JSON' });
+    } catch (e) {
+      res.status(500).json({ error: 'Lỗi phân tích JSON' });
     }
   });
 });
 
-// Cho Vercel handler
+// Xuất theo chuẩn Vercel
 module.exports = app;
 module.exports.handler = (req, res) => {
   app(req, res);
