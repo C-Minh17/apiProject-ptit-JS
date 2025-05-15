@@ -1,25 +1,33 @@
-const express = require('express');
 const fs = require('fs');
-const app = express();
+const express = require('express');
 const cors = require('cors');
-app.use(cors()); // Bật CORS cho tất cả origin
+
+// Tạo một ứng dụng Express
+const app = express();
+
+// Kích hoạt CORS
+app.use(cors());
 app.use(express.json());
-// Route gốc ("/"): trả về JSON thay vì HTML
+
+// Định nghĩa route '/'
 app.get('/', (req, res) => {
   fs.readFile('./data.json', 'utf8', (err, data) => {
     if (err) {
       return res.status(500).json({ error: 'Lỗi đọc file JSON' });
     }
 
-    // Trả về dữ liệu dạng JSON
-    const products = JSON.parse(data);
-    res.json(products);
+    try {
+      const products = JSON.parse(data);
+      res.json(products);
+    } catch (parseErr) {
+      res.status(500).json({ error: 'Lỗi phân tích dữ liệu JSON' });
+    }
   });
 });
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`API đang chạy tại http://localhost:${PORT}`);
-});
-
+// Xuất Express handler cho Vercel sử dụng
+module.exports = app;
+module.exports.handler = (req, res) => {
+  app(req, res);
+};
 
